@@ -14,7 +14,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-
     @Override
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
@@ -27,6 +26,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        userRepository.save(user);
+        User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        existingUser.setName(user.getName());
+        existingUser.setPhoto(user.getPhoto());
+
+        userRepository.save(existingUser);
     }
 }
